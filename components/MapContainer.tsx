@@ -33,61 +33,209 @@ const SEVERITY_INDEX: Record<string, number> = {
 };
 
 const ASSETS: MapAsset[] = [
-  { name: "Kabul", coords: [69.2075, 34.5553], tier: 1, type: "Capital" },
-  { name: "Tirana", coords: [19.8187, 41.3275], tier: 1, type: "Capital" },
-  { name: "Algiers", coords: [3.0588, 36.7538], tier: 1, type: "Capital" },
-  { name: "Andorra la Vella", coords: [1.5218, 42.5063], tier: 1, type: "Capital" },
-  { name: "Luanda", coords: [13.2344, -8.8383], tier: 1, type: "Capital" },
-  { name: "Buenos Aires", coords: [-58.3816, -34.6037], tier: 1, type: "Capital" },
-  { name: "Yerevan", coords: [44.5152, 40.1872], tier: 1, type: "Capital" },
-  { name: "Canberra", coords: [149.1300, -35.2809], tier: 1, type: "Capital" },
-  { name: "Vienna", coords: [16.3738, 48.2082], tier: 1, type: "Capital" },
-  { name: "Baku", coords: [49.8671, 40.4093], tier: 1, type: "Capital" },
-  { name: "Nassau", coords: [-77.3554, 25.0443], tier: 1, type: "Capital" },
-  { name: "Manama", coords: [50.5860, 26.2285], tier: 1, type: "Capital" },
-  { name: "Dhaka", coords: [90.4125, 23.8103], tier: 1, type: "Capital" },
-  { name: "Bridgetown", coords: [-59.6167, 13.0975], tier: 1, type: "Capital" },
-  { name: "Minsk", coords: [27.5615, 53.9045], tier: 1, type: "Capital" },
-  { name: "Brussels", coords: [4.3517, 50.8503], tier: 1, type: "Capital" },
-  { name: "Belmopan", coords: [-88.7713, 17.2510], tier: 1, type: "Capital" },
-  { name: "Porto-Novo", coords: [2.6289, 6.4969], tier: 1, type: "Capital" },
-  { name: "Thimphu", coords: [89.6390, 27.4728], tier: 1, type: "Capital" },
-  { name: "La Paz", coords: [-68.1193, -16.4897], tier: 1, type: "Capital" },
-  { name: "Sarajevo", coords: [18.4131, 43.8563], tier: 1, type: "Capital" },
-  { name: "Gaborone", coords: [25.9231, -24.6282], tier: 1, type: "Capital" },
-  { name: "Brasília", coords: [-47.8825, -15.7939], tier: 1, type: "Capital" },
-  { name: "Sofia", coords: [23.3219, 42.6977], tier: 1, type: "Capital" },
-  { name: "Ouagadougou", coords: [-1.5197, 12.3714], tier: 1, type: "Capital" },
-  { name: "Gitega", coords: [29.9246, -3.4264], tier: 1, type: "Capital" },
-  { name: "Phnom Penh", coords: [104.9282, 11.5564], tier: 1, type: "Capital" },
-  { name: "Yaoundé", coords: [11.5021, 3.8480], tier: 1, type: "Capital" },
-  { name: "Ottawa", coords: [-75.6972, 45.4215], tier: 1, type: "Capital" },
-  { name: "Praia", coords: [-23.5087, 14.9330], tier: 1, type: "Capital" },
-  { name: "Bangui", coords: [18.5582, 4.3947], tier: 1, type: "Capital" },
-  { name: "N'Djamena", coords: [15.0557, 12.1348], tier: 1, type: "Capital" },
-  { name: "Santiago", coords: [-70.6693, -33.4489], tier: 1, type: "Capital" },
-  { name: "Beijing", coords: [116.4074, 39.9042], tier: 1, type: "Capital" },
-  { name: "Bogotá", coords: [-74.0721, 4.7110], tier: 1, type: "Capital" },
-  { name: "Moroni", coords: [43.2551, -11.7172], tier: 1, type: "Capital" },
-  { name: "San José", coords: [-84.0907, 9.9281], tier: 1, type: "Capital" },
-  { name: "Zagreb", coords: [15.9819, 45.8150], tier: 1, type: "Capital" },
-  { name: "Havana", coords: [-82.3666, 23.1136], tier: 1, type: "Capital" },
-  { name: "Nicosia", coords: [33.3823, 35.1856], tier: 1, type: "Capital" },
-  { name: "Prague", coords: [14.4378, 50.0755], tier: 1, type: "Capital" },
-  { name: "Copenhagen", coords: [12.5683, 55.6761], tier: 1, type: "Capital" },
-  { name: "Djibouti", coords: [43.1456, 11.8251], tier: 1, type: "Capital" },
-  { name: "Roseau", coords: [-61.3794, 15.3092], tier: 1, type: "Capital" },
-  { name: "Santo Domingo", coords: [-69.9312, 18.4861], tier: 1, type: "Capital" },
-  { name: "Quito", coords: [-78.4678, -0.1807], tier: 1, type: "Capital" },
-  { name: "Cairo", coords: [31.2357, 30.0444], tier: 1, type: "Capital" },
-  { name: "San Salvador", coords: [-89.2182, 13.6929], tier: 1, type: "Capital" },
-  { name: "Malabo", coords: [8.7832, 3.7504], tier: 1, type: "Capital" },
-  { name: "Asmara", coords: [38.9251, 15.3229], tier: 1, type: "Capital" },
-  { name: "Tallinn", coords: [24.7536, 59.4370], tier: 1, type: "Capital" },
-  { name: "Kyiv", coords: [30.5234, 50.4501], tier: 1, type: "Capital" },
-  { name: "London", coords: [-0.1276, 51.5074], tier: 1, type: "Capital" },
-  { name: "Washington D.C.", coords: [-77.0369, 38.9072], tier: 1, type: "Capital" },
-  { name: "Sana'a", coords: [44.2075, 15.3694], tier: 1, type: "Capital" },
+  { name: "Kabul", coords: [69.2075, 34.5553], tier: 1, type: "Capital" }, // Afghanistan
+  { name: "Tirana", coords: [19.8187, 41.3275], tier: 1, type: "Capital" }, // Albania
+  { name: "Algiers", coords: [3.0588, 36.7538], tier: 1, type: "Capital" }, // Algeria
+  { name: "Andorra la Vella", coords: [1.5218, 42.5063], tier: 1, type: "Capital" }, // Andorra
+  { name: "Luanda", coords: [13.2344, -8.8383], tier: 1, type: "Capital" }, // Angola
+  { name: "Buenos Aires", coords: [-58.3816, -34.6037], tier: 1, type: "Capital" }, // Argentina
+  { name: "Yerevan", coords: [44.5152, 40.1872], tier: 1, type: "Capital" }, // Armenia
+  { name: "Canberra", coords: [149.1300, -35.2809], tier: 1, type: "Capital" }, // Australia
+  { name: "Vienna", coords: [16.3738, 48.2082], tier: 1, type: "Capital" }, // Austria
+  { name: "Baku", coords: [49.8671, 40.4093], tier: 1, type: "Capital" }, // Azerbaijan
+
+  { name: "Nassau", coords: [-77.3554, 25.0443], tier: 1, type: "Capital" }, // Bahamas
+  { name: "Manama", coords: [50.5860, 26.2285], tier: 1, type: "Capital" }, // Bahrain
+  { name: "Dhaka", coords: [90.4125, 23.8103], tier: 1, type: "Capital" }, // Bangladesh
+  { name: "Bridgetown", coords: [-59.6167, 13.0975], tier: 1, type: "Capital" }, // Barbados
+  { name: "Minsk", coords: [27.5615, 53.9045], tier: 1, type: "Capital" }, // Belarus
+  { name: "Brussels", coords: [4.3517, 50.8503], tier: 1, type: "Capital" }, // Belgium
+  { name: "Belmopan", coords: [-88.7713, 17.2510], tier: 1, type: "Capital" }, // Belize
+  { name: "Porto-Novo", coords: [2.6289, 6.4969], tier: 1, type: "Capital" }, // Benin
+  { name: "Thimphu", coords: [89.6390, 27.4728], tier: 1, type: "Capital" }, // Bhutan
+  { name: "La Paz", coords: [-68.1193, -16.4897], tier: 1, type: "Capital" }, // Bolivia
+
+  { name: "Sarajevo", coords: [18.4131, 43.8563], tier: 1, type: "Capital" }, // Bosnia & Herzegovina
+  { name: "Gaborone", coords: [25.9231, -24.6282], tier: 1, type: "Capital" }, // Botswana
+  { name: "Brasília", coords: [-47.8825, -15.7939], tier: 1, type: "Capital" }, // Brazil
+  { name: "Sofia", coords: [23.3219, 42.6977], tier: 1, type: "Capital" }, // Bulgaria
+  { name: "Ouagadougou", coords: [-1.5197, 12.3714], tier: 1, type: "Capital" }, // Burkina Faso
+  { name: "Gitega", coords: [29.9246, -3.4264], tier: 1, type: "Capital" }, // Burundi
+
+  { name: "Phnom Penh", coords: [104.9282, 11.5564], tier: 1, type: "Capital" }, // Cambodia
+  { name: "Yaoundé", coords: [11.5021, 3.8480], tier: 1, type: "Capital" }, // Cameroon
+  { name: "Ottawa", coords: [-75.6972, 45.4215], tier: 1, type: "Capital" }, // Canada
+  { name: "Praia", coords: [-23.5087, 14.9330], tier: 1, type: "Capital" }, // Cape Verde
+  { name: "Bangui", coords: [18.5582, 4.3947], tier: 1, type: "Capital" }, // Central African Republic
+  { name: "N'Djamena", coords: [15.0557, 12.1348], tier: 1, type: "Capital" }, // Chad
+  { name: "Santiago", coords: [-70.6693, -33.4489], tier: 1, type: "Capital" }, // Chile
+  { name: "Beijing", coords: [116.4074, 39.9042], tier: 1, type: "Capital" }, // China
+  { name: "Bogotá", coords: [-74.0721, 4.7110], tier: 1, type: "Capital" }, // Colombia
+  { name: "Moroni", coords: [43.2551, -11.7172], tier: 1, type: "Capital" }, // Comoros
+  { name: "San José", coords: [-84.0907, 9.9281], tier: 1, type: "Capital" }, // Costa Rica
+  { name: "Zagreb", coords: [15.9819, 45.8150], tier: 1, type: "Capital" }, // Croatia
+  { name: "Havana", coords: [-82.3666, 23.1136], tier: 1, type: "Capital" }, // Cuba
+  { name: "Nicosia", coords: [33.3823, 35.1856], tier: 1, type: "Capital" }, // Cyprus
+  { name: "Prague", coords: [14.4378, 50.0755], tier: 1, type: "Capital" }, // Czech Republic
+  { name: "Copenhagen", coords: [12.5683, 55.6761], tier: 1, type: "Capital" }, // Denmark
+  { name: "Djibouti", coords: [43.1456, 11.8251], tier: 1, type: "Capital" }, // Djibouti
+  { name: "Roseau", coords: [-61.3794, 15.3092], tier: 1, type: "Capital" }, // Dominica
+  { name: "Santo Domingo", coords: [-69.9312, 18.4861], tier: 1, type: "Capital" }, // Dominican Republic
+  { name: "Quito", coords: [-78.4678, -0.1807], tier: 1, type: "Capital" }, // Ecuador
+  { name: "Cairo", coords: [31.2357, 30.0444], tier: 1, type: "Capital" }, // Egypt
+  { name: "San Salvador", coords: [-89.2182, 13.6929], tier: 1, type: "Capital" }, // El Salvador
+  { name: "Malabo", coords: [8.7832, 3.7504], tier: 1, type: "Capital" }, // Equatorial Guinea
+  { name: "Asmara", coords: [38.9251, 15.3229], tier: 1, type: "Capital" }, // Eritrea
+  { name: "Tallinn", coords: [24.7536, 59.4370], tier: 1, type: "Capital" }, // Estonia
+
+  { name: "Mbabane", coords: [31.1333, -26.3167], tier: 1, type: "Capital" }, // Eswatini
+  { name: "Addis Ababa", coords: [38.7578, 8.9806], tier: 1, type: "Capital" }, // Ethiopia
+  { name: "Suva", coords: [178.4501, -18.1248], tier: 1, type: "Capital" }, // Fiji
+  { name: "Helsinki", coords: [24.9384, 60.1699], tier: 1, type: "Capital" }, // Finland
+  { name: "Paris", coords: [2.3522, 48.8566], tier: 1, type: "Capital" }, // France
+  { name: "Libreville", coords: [9.4673, 0.4162], tier: 1, type: "Capital" }, // Gabon
+  { name: "Banjul", coords: [-16.5780, 13.4549], tier: 1, type: "Capital" }, // Gambia
+  { name: "Tbilisi", coords: [44.8271, 41.7151], tier: 1, type: "Capital" }, // Georgia
+  { name: "Berlin", coords: [13.4050, 52.5200], tier: 1, type: "Capital" }, // Germany
+  { name: "Accra", coords: [-0.1870, 5.6037], tier: 1, type: "Capital" }, // Ghana
+
+  { name: "Athens", coords: [23.7275, 37.9838], tier: 1, type: "Capital" }, // Greece
+  { name: "St. George's", coords: [-61.7486, 12.0561], tier: 1, type: "Capital" }, // Grenada
+  { name: "Guatemala City", coords: [-90.5069, 14.6349], tier: 1, type: "Capital" }, // Guatemala
+  { name: "Conakry", coords: [-13.7122, 9.6412], tier: 1, type: "Capital" }, // Guinea
+  { name: "Bissau", coords: [-15.5984, 11.8636], tier: 1, type: "Capital" }, // Guinea-Bissau
+  { name: "Georgetown", coords: [-58.1551, 6.8013], tier: 1, type: "Capital" }, // Guyana
+  { name: "Port-au-Prince", coords: [-72.3074, 18.5944], tier: 1, type: "Capital" }, // Haiti
+  { name: "Tegucigalpa", coords: [-87.2068, 14.0723], tier: 1, type: "Capital" }, // Honduras
+  { name: "Budapest", coords: [19.0402, 47.4979], tier: 1, type: "Capital" }, // Hungary
+  { name: "Reykjavík", coords: [-21.8277, 64.1265], tier: 1, type: "Capital" }, // Iceland
+
+  { name: "New Delhi", coords: [77.2090, 28.6139], tier: 1, type: "Capital" }, // India
+  { name: "Jakarta", coords: [106.8456, -6.2088], tier: 1, type: "Capital" }, // Indonesia
+  { name: "Tehran", coords: [51.3890, 35.6892], tier: 1, type: "Capital" }, // Iran
+  { name: "Baghdad", coords: [44.3661, 33.3152], tier: 1, type: "Capital" }, // Iraq
+  { name: "Dublin", coords: [-6.2603, 53.3498], tier: 1, type: "Capital" }, // Ireland
+  { name: "Jerusalem", coords: [35.2137, 31.7683], tier: 1, type: "Capital" }, // Israel
+  { name: "Rome", coords: [12.4964, 41.9028], tier: 1, type: "Capital" }, // Italy
+  { name: "Kingston", coords: [-76.7920, 17.9712], tier: 1, type: "Capital" }, // Jamaica
+  { name: "Tokyo", coords: [139.6917, 35.6895], tier: 1, type: "Capital" }, // Japan
+  { name: "Amman", coords: [35.9457, 31.9566], tier: 1, type: "Capital" }, // Jordan
+
+  { name: "Astana", coords: [71.4704, 51.1605], tier: 1, type: "Capital" }, // Kazakhstan
+  { name: "Nairobi", coords: [36.8219, -1.2921], tier: 1, type: "Capital" }, // Kenya
+  { name: "Tarawa", coords: [172.9717, 1.4518], tier: 1, type: "Capital" }, // Kiribati
+  { name: "Pristina", coords: [21.1655, 42.6629], tier: 1, type: "Capital" }, // Kosovo
+  { name: "Kuwait City", coords: [47.9774, 29.3759], tier: 1, type: "Capital" }, // Kuwait
+  { name: "Bishkek", coords: [74.5698, 42.8746], tier: 1, type: "Capital" }, // Kyrgyzstan
+  { name: "Vientiane", coords: [102.6331, 17.9757], tier: 1, type: "Capital" }, // Laos
+  { name: "Riga", coords: [24.1052, 56.9496], tier: 1, type: "Capital" }, // Latvia
+  { name: "Beirut", coords: [35.5018, 33.8938], tier: 1, type: "Capital" }, // Lebanon
+  { name: "Maseru", coords: [27.4782, -29.3158], tier: 1, type: "Capital" }, // Lesotho
+  { name: "Monrovia", coords: [-10.7969, 6.3156], tier: 1, type: "Capital" }, // Liberia
+  { name: "Tripoli", coords: [13.1913, 32.8872], tier: 1, type: "Capital" }, // Libya
+  { name: "Vaduz", coords: [9.5215, 47.1410], tier: 1, type: "Capital" }, // Liechtenstein
+  { name: "Vilnius", coords: [25.2797, 54.6872], tier: 1, type: "Capital" }, // Lithuania
+  { name: "Luxembourg", coords: [6.1319, 49.6116], tier: 1, type: "Capital" }, // Luxembourg
+  { name: "Antananarivo", coords: [47.5079, -18.8792], tier: 1, type: "Capital" }, // Madagascar
+  { name: "Lilongwe", coords: [33.7741, -13.9626], tier: 1, type: "Capital" }, // Malawi
+  { name: "Kuala Lumpur", coords: [101.6869, 3.1390], tier: 1, type: "Capital" }, // Malaysia
+
+  { name: "Malé", coords: [73.2207, 4.1755], tier: 1, type: "Capital" }, // Maldives
+  { name: "Bamako", coords: [-7.9922, 12.6392], tier: 1, type: "Capital" }, // Mali
+  { name: "Valletta", coords: [14.5146, 35.8989], tier: 1, type: "Capital" }, // Malta
+  { name: "Majuro", coords: [171.3840, 7.0897], tier: 1, type: "Capital" }, // Marshall Islands
+  { name: "Nouakchott", coords: [-15.9785, 18.0735], tier: 1, type: "Capital" }, // Mauritania
+  { name: "Port Louis", coords: [57.4989, -20.1609], tier: 1, type: "Capital" }, // Mauritius
+  { name: "Mexico City", coords: [-99.1332, 19.4326], tier: 1, type: "Capital" }, // Mexico
+  { name: "Palikir", coords: [158.1610, 6.9248], tier: 1, type: "Capital" }, // Micronesia
+  { name: "Chișinău", coords: [28.8638, 47.0105], tier: 1, type: "Capital" }, // Moldova
+  { name: "Monaco", coords: [7.4246, 43.7384], tier: 1, type: "Capital" }, // Monaco
+
+  { name: "Ulaanbaatar", coords: [106.9057, 47.8864], tier: 1, type: "Capital" }, // Mongolia
+  { name: "Podgorica", coords: [19.2594, 42.4304], tier: 1, type: "Capital" }, // Montenegro
+  { name: "Rabat", coords: [-6.8498, 34.0209], tier: 1, type: "Capital" }, // Morocco
+  { name: "Maputo", coords: [32.5732, -25.9692], tier: 1, type: "Capital" }, // Mozambique
+  { name: "Naypyidaw", coords: [96.0785, 19.7633], tier: 1, type: "Capital" }, // Myanmar
+  { name: "Windhoek", coords: [17.0658, -22.5609], tier: 1, type: "Capital" }, // Namibia
+  { name: "Yaren", coords: [166.9209, -0.5477], tier: 1, type: "Capital District" }, // Nauru
+  { name: "Kathmandu", coords: [85.3240, 27.7172], tier: 1, type: "Capital" }, // Nepal
+  { name: "Amsterdam", coords: [4.9041, 52.3676], tier: 1, type: "Capital" }, // Netherlands
+  { name: "Wellington", coords: [174.7762, -41.2865], tier: 1, type: "Capital" }, // New Zealand
+
+  { name: "Managua", coords: [-86.2514, 12.1149], tier: 1, type: "Capital" }, // Nicaragua
+  { name: "Niamey", coords: [2.1254, 13.5116], tier: 1, type: "Capital" }, // Niger
+  { name: "Abuja", coords: [7.3986, 9.0765], tier: 1, type: "Capital" }, // Nigeria
+  { name: "Pyongyang", coords: [125.7625, 39.0392], tier: 1, type: "Capital" }, // North Korea
+  { name: "Skopje", coords: [21.4316, 41.9981], tier: 1, type: "Capital" }, // North Macedonia
+  { name: "Oslo", coords: [10.7522, 59.9139], tier: 1, type: "Capital" }, // Norway
+  { name: "Muscat", coords: [58.4059, 23.5859], tier: 1, type: "Capital" }, // Oman
+  { name: "Islamabad", coords: [73.0479, 33.6844], tier: 1, type: "Capital" }, // Pakistan
+  { name: "Ngerulmud", coords: [134.6243, 7.5000], tier: 1, type: "Capital" }, // Palau
+  { name: "Panama City", coords: [-79.5199, 8.9824], tier: 1, type: "Capital" }, // Panama
+
+  { name: "Port Moresby", coords: [147.1797, -9.4438], tier: 1, type: "Capital" }, // Papua New Guinea
+  { name: "Asunción", coords: [-57.5759, -25.2637], tier: 1, type: "Capital" }, // Paraguay
+  { name: "Lima", coords: [-77.0428, -12.0464], tier: 1, type: "Capital" }, // Peru
+  { name: "Manila", coords: [120.9842, 14.5995], tier: 1, type: "Capital" }, // Philippines
+  { name: "Warsaw", coords: [21.0122, 52.2297], tier: 1, type: "Capital" }, // Poland
+  { name: "Lisbon", coords: [-9.1393, 38.7223], tier: 1, type: "Capital" }, // Portugal
+  { name: "Doha", coords: [51.5310, 25.2854], tier: 1, type: "Capital" }, // Qatar
+  { name: "Bucharest", coords: [26.1025, 44.4268], tier: 1, type: "Capital" }, // Romania
+  { name: "Moscow", coords: [37.6173, 55.7558], tier: 1, type: "Capital" }, // Russia
+  { name: "Kigali", coords: [30.0619, -1.9441], tier: 1, type: "Capital" }, // Rwanda
+
+  { name: "Basseterre", coords: [-62.7177, 17.3026], tier: 1, type: "Capital" }, // Saint Kitts & Nevis
+  { name: "Castries", coords: [-60.9875, 14.0101], tier: 1, type: "Capital" }, // Saint Lucia
+  { name: "Kingstown", coords: [-61.2248, 13.1600], tier: 1, type: "Capital" }, // Saint Vincent
+  { name: "Apia", coords: [-171.7514, -13.8507], tier: 1, type: "Capital" }, // Samoa
+  { name: "San Marino", coords: [12.4578, 43.9424], tier: 1, type: "Capital" }, // San Marino
+  { name: "São Tomé", coords: [6.7273, 0.3365], tier: 1, type: "Capital" }, // São Tomé & Príncipe
+  { name: "Riyadh", coords: [46.6753, 24.7136], tier: 1, type: "Capital" }, // Saudi Arabia
+  { name: "Dakar", coords: [-17.4677, 14.7167], tier: 1, type: "Capital" }, // Senegal
+  { name: "Belgrade", coords: [20.4489, 44.7866], tier: 1, type: "Capital" }, // Serbia
+  { name: "Victoria", coords: [55.4513, -4.6191], tier: 1, type: "Capital" }, // Seychelles
+  { name: "Freetown", coords: [-13.2317, 8.4657], tier: 1, type: "Capital" }, // Sierra Leone
+  { name: "Singapore", coords: [103.8198, 1.3521], tier: 1, type: "Capital" }, // Singapore
+  { name: "Bratislava", coords: [17.1077, 48.1486], tier: 1, type: "Capital" }, // Slovakia
+  { name: "Ljubljana", coords: [14.5058, 46.0569], tier: 1, type: "Capital" }, // Slovenia
+  { name: "Honiara", coords: [159.9729, -9.4456], tier: 1, type: "Capital" }, // Solomon Islands
+  { name: "Mogadishu", coords: [45.3182, 2.0469], tier: 1, type: "Capital" }, // Somalia
+  { name: "Pretoria", coords: [28.2293, -25.7479], tier: 1, type: "Capital" }, // South Africa
+  { name: "Seoul", coords: [126.9780, 37.5665], tier: 1, type: "Capital" }, // South Korea
+  { name: "Juba", coords: [31.5825, 4.8594], tier: 1, type: "Capital" }, // South Sudan
+  { name: "Madrid", coords: [-3.7038, 40.4168], tier: 1, type: "Capital" }, // Spain
+  { name: "Colombo", coords: [79.8612, 6.9271], tier: 1, type: "Capital" }, // Sri Lanka
+  { name: "Khartoum", coords: [32.5599, 15.5007], tier: 1, type: "Capital" }, // Sudan
+  { name: "Paramaribo", coords: [-55.2038, 5.8520], tier: 1, type: "Capital" }, // Suriname
+  { name: "Stockholm", coords: [18.0686, 59.3293], tier: 1, type: "Capital" }, // Sweden
+  { name: "Bern", coords: [7.4474, 46.9480], tier: 1, type: "Capital" }, // Switzerland
+  { name: "Damascus", coords: [36.2777, 33.5147], tier: 1, type: "Capital" }, // Syria
+  { name: "Taipei", coords: [121.5654, 25.0330], tier: 1, type: "Capital" }, // Taiwan
+  { name: "Dushanbe", coords: [68.7870, 38.5598], tier: 1, type: "Capital" }, // Tajikistan
+  { name: "Dodoma", coords: [35.7516, -6.1630], tier: 1, type: "Capital" }, // Tanzania
+  { name: "Bangkok", coords: [100.5018, 13.7563], tier: 1, type: "Capital" }, // Thailand
+  { name: "Dili", coords: [125.5603, -8.5569], tier: 1, type: "Capital" }, // Timor-Leste
+  { name: "Lomé", coords: [1.2123, 6.1375], tier: 1, type: "Capital" }, // Togo
+  { name: "Nukuʻalofa", coords: [-175.2049, -21.1394], tier: 1, type: "Capital" }, // Tonga
+  { name: "Port of Spain", coords: [-61.5189, 10.6549], tier: 1, type: "Capital" }, // Trinidad & Tobago
+  { name: "Tunis", coords: [10.1658, 36.8065], tier: 1, type: "Capital" }, // Tunisia
+  { name: "Ankara", coords: [32.8597, 39.9334], tier: 1, type: "Capital" }, // Turkey
+  { name: "Ashgabat", coords: [58.3794, 37.9601], tier: 1, type: "Capital" }, // Turkmenistan
+  { name: "Funafuti", coords: [179.1940, -8.5211], tier: 1, type: "Capital" }, // Tuvalu
+  { name: "Kampala", coords: [32.5825, 0.3476], tier: 1, type: "Capital" }, // Uganda
+  { name: "Kyiv", coords: [30.5234, 50.4501], tier: 1, type: "Capital" }, // Ukraine
+  { name: "Abu Dhabi", coords: [54.3773, 24.4539], tier: 1, type: "Capital" }, // UAE
+  { name: "London", coords: [-0.1276, 51.5074], tier: 1, type: "Capital" }, // United Kingdom
+  { name: "Washington D.C.", coords: [-77.0369, 38.9072], tier: 1, type: "Capital" }, // United States
+  { name: "Montevideo", coords: [-56.1645, -34.9011], tier: 1, type: "Capital" }, // Uruguay
+  { name: "Tashkent", coords: [69.2401, 41.2995], tier: 1, type: "Capital" }, // Uzbekistan
+  { name: "Port Vila", coords: [168.3273, -17.7333], tier: 1, type: "Capital" }, // Vanuatu
+  { name: "Vatican City", coords: [12.4534, 41.9029], tier: 1, type: "Capital" }, // Vatican City
+  { name: "Caracas", coords: [-66.9036, 10.4806], tier: 1, type: "Capital" }, // Venezuela
+  { name: "Hanoi", coords: [105.8342, 21.0278], tier: 1, type: "Capital" }, // Vietnam
+  { name: "Sana'a", coords: [44.2075, 15.3694], tier: 1, type: "Capital" }, // Yemen
+  { name: "Lusaka", coords: [28.3228, -15.3875], tier: 1, type: "Capital" }, // Zambia
+  { name: "Harare", coords: [31.0522, -17.8252], tier: 1, type: "Capital" }, // Zimbabwe
 ];
 
 const MapContainer: React.FC<MapContainerProps> = ({ onCountryClick, onConnectionClick, connections, showConnections }) => {

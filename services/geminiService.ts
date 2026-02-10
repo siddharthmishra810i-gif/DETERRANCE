@@ -11,6 +11,7 @@ export async function fetchConflictBriefing(countryName: string) {
       1. Identify current political leadership (Head of State/Government).
       2. List specific conflict hotspots with approximate [latitude, longitude].
       3. Detail all active armed conflicts or political violence. 
+      4. Provide historical trend data for the last 5 years (annual increments), estimating the regional severity score (0-100) and the number of active distinct conflict zones/actors.
       Use Wikipedia-style historical grounding for root causes and actor descriptions.`,
       config: {
         responseMimeType: "application/json",
@@ -32,6 +33,17 @@ export async function fetchConflictBriefing(countryName: string) {
                   coordinates: { type: Type.ARRAY, items: { type: Type.NUMBER } },
                   intensity: { type: Type.NUMBER },
                   description: { type: Type.STRING }
+                }
+              }
+            },
+            historicalTrends: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  year: { type: Type.STRING },
+                  severity: { type: Type.NUMBER },
+                  conflicts: { type: Type.NUMBER }
                 }
               }
             },

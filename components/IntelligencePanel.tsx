@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { CountryIntelligence, ViewMode, ConflictDeepDetail, ConflictStatus } from '../types';
 import { fetchConflictBriefing, fetchMapsIntelligence } from '../services/geminiService';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 interface IntelligencePanelProps {
   countryCode: string | null;
@@ -28,7 +29,6 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
     setData(brief);
     setLoading(false);
     
-    // Auto-fetch maps intel for the capital or active hotspots
     if (brief?.hotspots?.length > 0) {
       const mainSpot = brief.hotspots[0];
       handleFetchMaps(mainSpot.name, mainSpot.coordinates[1], mainSpot.coordinates[0]);
@@ -105,6 +105,99 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
                 {data?.brief}
               </div>
             </section>
+
+            {/* Historical Trend Visualization */}
+            {data?.historicalTrends && data.historicalTrends.length > 0 && (
+              <section className="space-y-5">
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
+                  Temporal Entropy Analysis // 5-Year Drift
+                </h3>
+                
+                <div className="grid grid-cols-1 gap-6">
+                  {/* Severity Line Chart */}
+                  <div className="bg-black/30 p-5 rounded-2xl border border-white/5 h-[220px]">
+                    <p className="text-[9px] text-slate-500 uppercase mono mb-4 tracking-widest">Severity Score Trend</p>
+                    <ResponsiveContainer width="100%" height="80%">
+                      <AreaChart data={data.historicalTrends}>
+                        <defs>
+                          <linearGradient id="colorSev" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff0a" vertical={false} />
+                        <XAxis 
+                          dataKey="year" 
+                          stroke="#475569" 
+                          fontSize={9} 
+                          tickLine={false} 
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis 
+                          stroke="#475569" 
+                          fontSize={9} 
+                          tickLine={false} 
+                          axisLine={false}
+                          domain={[0, 100]}
+                        />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '10px' }}
+                          itemStyle={{ color: '#ef4444', fontWeight: 'bold' }}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="severity" 
+                          stroke="#ef4444" 
+                          strokeWidth={2} 
+                          fillOpacity={1} 
+                          fill="url(#colorSev)" 
+                          animationDuration={1500}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Conflict Count Line Chart */}
+                  <div className="bg-black/30 p-5 rounded-2xl border border-white/5 h-[220px]">
+                    <p className="text-[9px] text-slate-500 uppercase mono mb-4 tracking-widest">Active Conflict Density</p>
+                    <ResponsiveContainer width="100%" height="80%">
+                      <LineChart data={data.historicalTrends}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff0a" vertical={false} />
+                        <XAxis 
+                          dataKey="year" 
+                          stroke="#475569" 
+                          fontSize={9} 
+                          tickLine={false} 
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis 
+                          stroke="#475569" 
+                          fontSize={9} 
+                          tickLine={false} 
+                          axisLine={false}
+                        />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '10px' }}
+                          itemStyle={{ color: '#0ea5e9', fontWeight: 'bold' }}
+                        />
+                        <Line 
+                          type="stepAfter" 
+                          dataKey="conflicts" 
+                          stroke="#0ea5e9" 
+                          strokeWidth={2} 
+                          dot={{ fill: '#0ea5e9', r: 3 }}
+                          activeDot={{ r: 5, stroke: '#fff', strokeWidth: 1 }}
+                          animationDuration={2000}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* Geospatial Grounding (Google Maps Tool) */}
             <section className="space-y-4">
