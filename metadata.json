@@ -1,0 +1,7 @@
+{
+  "name": "Aegis Global Intelligence",
+  "description": "A Palantir-inspired global conflict intelligence platform providing real-time situational awareness, AI-powered conflict briefings, and interactive geospatial data visualization.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
