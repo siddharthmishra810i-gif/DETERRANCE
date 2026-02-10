@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { CountryIntelligence, ViewMode, ConflictDeepDetail, ConflictStatus } from '../types';
+import { CountryIntelligence, ViewMode, ConflictDeepDetail, ConflictStatus, ConflictType } from '../types';
 import { fetchConflictBriefing, fetchMapsIntelligence } from '../services/geminiService';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
@@ -16,6 +16,10 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
   const [data, setData] = useState<any>(null);
   const [mapsIntel, setMapsIntel] = useState<any>(null);
   const [mapsLoading, setMapsLoading] = useState(false);
+  
+  // Filtering states
+  const [typeFilter, setTypeFilter] = useState<string>('ALL');
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   useEffect(() => {
     if (countryName) {
@@ -41,6 +45,46 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
     setMapsIntel(intel);
     setMapsLoading(false);
   };
+
+  const getTrend = () => {
+    if (!data?.historicalTrends || data.historicalTrends.length < 2) return null;
+    const current = data.historicalTrends[data.historicalTrends.length - 1].severity;
+    const previous = data.historicalTrends[data.historicalTrends.length - 2].severity;
+    const diff = current - previous;
+    const percent = previous !== 0 ? (diff / previous) * 100 : 0;
+    return { diff, percent: percent.toFixed(1) };
+  };
+
+  const exportToCSV = () => {
+    if (!data?.deepDetails) return;
+    const headers = ["Name", "Start Date", "Type", "Status", "Actors", "Total Casualties"];
+    const rows = data.deepDetails.map((d: any) => [
+      `"${d.name}"`,
+      d.startDate,
+      d.type,
+      d.status,
+      `"${d.actors?.join('; ')}"`,
+      d.casualties?.total || 0
+    ]);
+    
+    const csvContent = [headers.join(','), ...rows.map((r: any) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Aegis_Intel_${countryCode}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const filteredConflicts = data?.deepDetails?.filter((c: any) => {
+    const matchesType = typeFilter === 'ALL' || c.type === typeFilter;
+    const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
+    return matchesType && matchesStatus;
+  });
+
+  const trend = getTrend();
 
   if (!countryCode) return null;
 
@@ -86,7 +130,12 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
                   <span className={`text-3xl font-black ${data?.severityScore > 75 ? 'text-red-500' : 'text-amber-500'}`}>
                     {data?.severityScore || '--'}
                   </span>
-                  <span className="text-xs text-slate-600 mb-1 font-bold">/ 100</span>
+                  {trend && (
+                    <div className={`flex items-center gap-0.5 mb-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold ${trend.diff > 0 ? 'text-red-400 bg-red-900/20' : trend.diff < 0 ? 'text-emerald-400 bg-emerald-900/20' : 'text-slate-400 bg-slate-800'}`}>
+                      {trend.diff > 0 ? '▲' : trend.diff < 0 ? '▼' : '●'}
+                      {trend.percent}%
+                    </div>
+                  )}
                 </div>
                 <div className="mt-2 flex items-center gap-1.5">
                    <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${data?.status === 'ESCALATING' ? 'bg-red-500' : 'bg-emerald-500'}`}></div>
@@ -199,58 +248,60 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
               </section>
             )}
 
-            {/* Geospatial Grounding (Google Maps Tool) */}
-            <section className="space-y-4">
-              <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                Geospatial Grounding // Maps Signal
-              </h3>
-              {mapsLoading ? (
-                <div className="h-20 glass rounded-xl flex items-center justify-center animate-pulse">
-                  <span className="text-[10px] text-slate-500 mono">QUERYING GOOGLE MAPS NODE...</span>
+            {/* Filtering Controls */}
+            {data?.deepDetails && (
+              <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+                    Dossier Filters
+                  </h3>
+                  <button 
+                    onClick={() => { setTypeFilter('ALL'); setStatusFilter('ALL'); }}
+                    className="text-[8px] text-sky-400 hover:text-white mono uppercase transition-colors"
+                  >
+                    Reset All
+                  </button>
                 </div>
-              ) : mapsIntel ? (
-                <div className="bg-sky-950/20 border border-sky-500/20 rounded-2xl p-4 space-y-4">
-                  <div className="text-[11px] text-sky-200 leading-relaxed italic mono">
-                    {mapsIntel.text}
-                  </div>
-                  {mapsIntel.groundingChunks?.length > 0 && (
-                    <div className="flex flex-col gap-2 border-t border-sky-500/10 pt-3">
-                      <p className="text-[8px] text-slate-500 uppercase mono">Verified Tactical Locations</p>
-                      {mapsIntel.groundingChunks.map((chunk: any, i: number) => {
-                        if (chunk.maps) {
-                          return (
-                            <a 
-                              key={i} 
-                              href={chunk.maps.uri} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-[10px] text-sky-400 hover:text-sky-300 underline flex items-center gap-2 bg-sky-900/20 p-2 rounded-lg transition-colors border border-sky-500/10"
-                            >
-                              <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                              <span className="truncate">{chunk.maps.title}</span>
-                            </a>
-                          );
-                        }
-                        return null;
-                      })}
-                    </div>
-                  )}
+                <div className="grid grid-cols-2 gap-3">
+                  <select 
+                    value={typeFilter} 
+                    onChange={(e) => setTypeFilter(e.target.value)}
+                    className="bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-300 mono focus:ring-1 focus:ring-sky-500 outline-none"
+                  >
+                    <option value="ALL">ALL TYPES</option>
+                    {Object.values(ConflictType).map(t => <option key={t} value={t}>{t.toUpperCase()}</option>)}
+                  </select>
+                  <select 
+                    value={statusFilter} 
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="bg-white/5 border border-white/10 rounded-lg p-2 text-[10px] text-slate-300 mono focus:ring-1 focus:ring-sky-500 outline-none"
+                  >
+                    <option value="ALL">ALL STATUS</option>
+                    {Object.values(ConflictStatus).map(s => <option key={s} value={s}>{s.toUpperCase()}</option>)}
+                  </select>
                 </div>
-              ) : (
-                <div className="text-[9px] text-slate-600 mono italic">No tactical place data available for this sector.</div>
-              )}
-            </section>
+              </section>
+            )}
 
             {/* Conflict Dossier Cards */}
-            {data?.deepDetails && (
+            {filteredConflicts && (
               <section className="space-y-5">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping"></div>
-                  Theater Intelligence (Conflict Dossiers)
-                </h3>
-                {data.deepDetails.map((conflict: ConflictDeepDetail, idx: number) => (
-                  <div key={idx} className="bg-slate-900/80 rounded-2xl border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-white/20">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping"></div>
+                    Theater Intelligence ({filteredConflicts.length})
+                  </h3>
+                  <button 
+                    onClick={exportToCSV}
+                    className="text-[8px] flex items-center gap-1.5 px-2 py-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md text-slate-400 hover:text-white transition-all mono uppercase"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                    CSV Export
+                  </button>
+                </div>
+                {filteredConflicts.length > 0 ? filteredConflicts.map((conflict: ConflictDeepDetail, idx: number) => (
+                  <div key={idx} className="bg-slate-900/80 rounded-2xl border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-white/20 animate-in fade-in slide-in-from-right-4 duration-300">
                     <div className="px-5 py-3 bg-white/5 flex justify-between items-center border-b border-white/5">
                       <div className="flex flex-col">
                          <h4 className="font-black text-slate-100 text-xs uppercase tracking-wider">{conflict.name}</h4>
@@ -288,7 +339,12 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
                       </div>
                     </div>
                   </div>
-                ))}
+                )) : (
+                  <div className="p-10 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center gap-3">
+                    <svg className="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <p className="text-[10px] text-slate-500 uppercase mono tracking-widest text-center">No dossier entries matching current filter set.</p>
+                  </div>
+                )}
               </section>
             )}
           </>
@@ -297,7 +353,7 @@ const IntelligencePanel: React.FC<IntelligencePanelProps> = ({ countryCode, coun
 
       {/* Footer Actions */}
       <div className="p-6 bg-slate-900/60 border-t border-white/10 flex gap-4">
-        <button className="flex-1 bg-white hover:bg-slate-200 text-black font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-xl">
+        <button onClick={exportToCSV} className="flex-1 bg-white hover:bg-slate-200 text-black font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-xl">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
           Export Full Signal
         </button>
